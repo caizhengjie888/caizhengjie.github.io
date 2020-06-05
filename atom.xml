@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Alex&#39;s Blog</title>
+  
+  <subtitle>write code and love life</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2020-06-05T08:45:40.428Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>caizhengjie</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>发布第一篇个人博客</title>
+    <link href="http://yoursite.com/2020/06/04/%E5%8F%91%E5%B8%83%E7%AC%AC%E4%B8%80%E7%AF%87%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"/>
+    <id>http://yoursite.com/2020/06/04/%E5%8F%91%E5%B8%83%E7%AC%AC%E4%B8%80%E7%AF%87%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</id>
+    <published>2020-06-04T05:06:54.000Z</published>
+    <updated>2020-06-05T08:45:40.428Z</updated>
+    
+    <content type="html"><![CDATA[        <h2 id="第一章"   >          <a href="#第一章" class="heading-link"><i class="fas fa-link"></i></a>第一章</h2>      <p>hello world</p>        <h2 id="第二章"   >          <a href="#第二章" class="heading-link"><i class="fas fa-link"></i></a>第二章</h2>      <p>hello Java<br>hello python<br>时代大厦</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        
+        &lt;h2 id=&quot;第一章&quot;   &gt;
+          &lt;a href=&quot;#第一章&quot; class=&quot;heading-link&quot;&gt;&lt;i class=&quot;fas fa-link&quot;&gt;&lt;/i&gt;&lt;/a&gt;第一章&lt;/h2&gt;
+      &lt;p&gt;hello world&lt;/p&gt;
+
+  
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://yoursite.com/2020/06/04/hello-world/"/>
+    <id>http://yoursite.com/2020/06/04/hello-world/</id>
+    <published>2020-06-04T04:59:48.061Z</published>
+    <updated>2020-06-04T04:59:48.061Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to <span class="exturl"><a class="exturl__link"   href="https://hexo.io/"  target="_blank" rel="noopener">Hexo</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>! This is your very first post. Check <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/"  target="_blank" rel="noopener">documentation</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> for more info. If you get any problems when using Hexo, you can find the answer in <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/troubleshooting.html"  target="_blank" rel="noopener">troubleshooting</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> or you can ask me on <span class="exturl"><a class="exturl__link"   href="https://github.com/hexojs/hexo/issues"  target="_blank" rel="noopener">GitHub</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>.</p>        <h2 id="Quick-Start"   >          <a href="#Quick-Start" class="heading-link"><i class="fas fa-link"></i></a>Quick Start</h2>              <h3 id="Create-a-new-post"   >          <a href="#Create-a-new-post" class="heading-link"><i class="fas fa-link"></i></a>Create a new post</h3>      <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></div></figure><p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/writing.html"  target="_blank" rel="noopener">Writing</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>        <h3 id="Run-server"   >          <a href="#Run-server" class="heading-link"><i class="fas fa-link"></i></a>Run server</h3>      <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></div></figure><p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/server.html"  target="_blank" rel="noopener">Server</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>        <h3 id="Generate-static-files"   >          <a href="#Generate-static-files" class="heading-link"><i class="fas fa-link"></i></a>Generate static files</h3>      <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></div></figure><p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/generating.html"  target="_blank" rel="noopener">Generating</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>        <h3 id="Deploy-to-remote-sites"   >          <a href="#Deploy-to-remote-sites" class="heading-link"><i class="fas fa-link"></i></a>Deploy to remote sites</h3>      <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></div></figure><p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/one-command-deployment.html"  target="_blank" rel="noopener">Deployment</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;Welcome to &lt;span class=&quot;exturl&quot;&gt;&lt;a class=&quot;exturl__link&quot;   href=&quot;https://hexo.io/&quot;  target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;&lt;span class=&quot;ex
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+</feed>
