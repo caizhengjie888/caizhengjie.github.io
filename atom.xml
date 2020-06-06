@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-06-06T07:18:15.452Z</updated>
+  <updated>2020-06-06T09:44:53.131Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -18,10 +18,10 @@
   
   <entry>
     <title>Hadoop</title>
-    <link href="http://yoursite.com/2020/06/06/Hadoop/"/>
-    <id>http://yoursite.com/2020/06/06/Hadoop/</id>
+    <link href="http://yoursite.com/posts/seourl/"/>
+    <id>http://yoursite.com/posts/seourl/</id>
     <published>2020-06-06T07:00:32.000Z</published>
-    <updated>2020-06-06T07:18:15.452Z</updated>
+    <updated>2020-06-06T09:44:53.131Z</updated>
     
     <summary type="html">
     
@@ -37,10 +37,10 @@
   
   <entry>
     <title>Python</title>
-    <link href="http://yoursite.com/2020/06/06/Python/"/>
-    <id>http://yoursite.com/2020/06/06/Python/</id>
+    <link href="http://yoursite.com/posts/seourl/"/>
+    <id>http://yoursite.com/posts/seourl/</id>
     <published>2020-06-06T06:53:26.000Z</published>
-    <updated>2020-06-06T08:28:04.242Z</updated>
+    <updated>2020-06-06T09:44:53.127Z</updated>
     
     <summary type="html">
     
@@ -52,10 +52,10 @@
   
   <entry>
     <title>Java</title>
-    <link href="http://yoursite.com/2020/06/06/Java/"/>
-    <id>http://yoursite.com/2020/06/06/Java/</id>
+    <link href="http://yoursite.com/posts/seourl/"/>
+    <id>http://yoursite.com/posts/seourl/</id>
     <published>2020-06-06T06:42:32.000Z</published>
-    <updated>2020-06-06T08:28:19.171Z</updated>
+    <updated>2020-06-06T09:44:53.130Z</updated>
     
     <summary type="html">
     
@@ -67,10 +67,10 @@
   
   <entry>
     <title>博客文章</title>
-    <link href="http://yoursite.com/2020/06/05/%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/"/>
-    <id>http://yoursite.com/2020/06/05/%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/</id>
+    <link href="http://yoursite.com/posts/seourl/"/>
+    <id>http://yoursite.com/posts/seourl/</id>
     <published>2020-06-05T10:00:42.000Z</published>
-    <updated>2020-06-06T07:17:59.419Z</updated>
+    <updated>2020-06-06T09:44:53.128Z</updated>
     
     <summary type="html">
     
@@ -82,10 +82,10 @@
   
   <entry>
     <title>发布第一篇个人博客</title>
-    <link href="http://yoursite.com/2020/06/04/%E5%8F%91%E5%B8%83%E7%AC%AC%E4%B8%80%E7%AF%87%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"/>
-    <id>http://yoursite.com/2020/06/04/%E5%8F%91%E5%B8%83%E7%AC%AC%E4%B8%80%E7%AF%87%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</id>
+    <link href="http://yoursite.com/posts/seourl/"/>
+    <id>http://yoursite.com/posts/seourl/</id>
     <published>2020-06-04T05:06:54.000Z</published>
-    <updated>2020-06-06T07:54:04.187Z</updated>
+    <updated>2020-06-06T09:42:48.976Z</updated>
     
     <content type="html"><![CDATA[        <h2 id="第一章"   >          <a href="#第一章" class="heading-link"><i class="fas fa-link"></i></a>第一章</h2>      <p>hello world</p>        <h2 id="第二章"   >          <a href="#第二章" class="heading-link"><i class="fas fa-link"></i></a>第二章</h2>      <p>hello Java<br>hello python<br>时代大厦</p>]]></content>
     
@@ -115,8 +115,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="http://yoursite.com/2020/06/04/hello-world/"/>
-    <id>http://yoursite.com/2020/06/04/hello-world/</id>
+    <link href="http://yoursite.com/posts/undefined/"/>
+    <id>http://yoursite.com/posts/undefined/</id>
     <published>2020-06-04T04:59:48.061Z</published>
     <updated>2020-06-04T04:59:48.061Z</updated>
     
