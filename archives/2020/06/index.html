@@ -116,40 +116,32 @@ if (true || false) {
   initQuicklink();
 } else {
   window.addEventListener('DOMContentLoaded', initQuicklink, false);
-}</script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script></div><script data-pjax="">function loadDisqus () {
-  if (!document.getElementById('disqus_thread')) {
-    return;
-  }
-  if (window.DISQUS) {
-    DISQUS.reset({
-      reload: true,
-      config: function () {
-        this.page.url = '';
-        this.page.identifier = 'archives/2020/06/index.html';
-        this.page.title = '';
-      }
-    });
-  } else {
-    var d = document;
-    var sc = d.createElement('script');
-    var se = d.createElement('script');
+}</script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script></div><script src="https://cdn.jsdelivr.net/npm/leancloud-storage@latest/dist/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script><script data-pjax="">function loadValine () {
+  var GUEST_INFO = ['nick', 'mail', 'link'];
+  var guest_info = 'nick,mail,link';
 
-    if (true) {
-      sc.src = 'https://https://www.apollojava.com/.disqus.com/count.js';
-      sc.id = 'dsq-count-scr';
-      sc.async = true;
-      if (true) {
-        sc.setAttribute('data-pjax', '');
-      }
-      (d.head || d.body).appendChild(sc);
-    }
-    se.src = 'https://https://www.apollojava.com/.disqus.com/embed.js';
-    (d.head || d.body).appendChild(se);
-  }
+  guest_info = guest_info.split(',').filter(function(item) {
+    return GUEST_INFO.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#valine-container',
+    appId: 'gyUN96pAmUofqPnwVQeoJK1L-9Nh9j0Va',
+    appKey: 'TN5t89IrYDg41LN1JN1sxQO7',
+    notify: true,
+    verify: true,
+    placeholder: 'Just go go',
+    avatar: 'mp',
+    meta: guest_info,
+    pageSize: '10' || 10,
+    visitor: false,
+    recordIP: false,
+    lang: '' || 'zh-cn',
+    path: window.location.pathname
+  });
 }
 
 if (true) {
-  loadDisqus();
+  loadValine();
 } else {
-  window.addEventListener('DOMContentLoaded', loadDisqus, false);
+  window.addEventListener('DOMContentLoaded', loadValine, false);
 }</script><script src="/js/utils.js?v=2.0.1"></script><script src="/js/stun-boot.js?v=2.0.1"></script><script src="/js/scroll.js?v=2.0.1"></script><script src="/js/header.js?v=2.0.1"></script><script src="/js/sidebar.js?v=2.0.1"></script></body></html>
