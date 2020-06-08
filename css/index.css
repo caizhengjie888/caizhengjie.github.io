@@ -624,7 +624,7 @@ body::after {
   position: fixed;
   height: 100vh;
   z-index: -2;
-  background: url("/images/background/landscape-1112911.jpg") no-repeat center/cover;
+  background: url("/images/background/CROh0hfuG3I.jpg") no-repeat center/cover;
 }
 .container {
   white-space: normal;
@@ -738,7 +738,7 @@ body::after {
   width: 100%;
   font-size: 18px;
   background-color: #2d2e30;
-  height: 80vh;
+  height: 100vh;
 }
 .header-inner--bgcolor {
   background-color: #333;
@@ -925,7 +925,7 @@ body::after {
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: url("/images/background/gower-5190799.jpg") no-repeat center/cover;
+  background: url("/images/background/nyL-rzwP-Mk.jpg") no-repeat center/cover;
 }
 .header-banner-info {
   position: absolute;
@@ -1090,8 +1090,6 @@ body::after {
   text-align: center;
   color: #f5f6f7;
   background-color: #2d2e30;
-  z-index: 0;
-  background: url("/images/background/sunrise-1756274.jpg") no-repeat center/cover;
 }
 .footer-inner::before {
   content: '';
@@ -1102,7 +1100,7 @@ body::after {
   z-index: -1;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0);
 }
 .footer a {
   color: #c20808;
@@ -3068,4 +3066,8 @@ html.nightmode {
     padding: 0.5rem 1rem;
     width: 100%;
   }
+}
+.footer-inner {
+  background-color: rgba(255,255,255,0);
+  color: #efefef;
 }
