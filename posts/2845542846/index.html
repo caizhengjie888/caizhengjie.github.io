@@ -1,0 +1,498 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.0.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.0.1" type="image/png" sizes="32x32"><meta name="description" content="一、HBase在实际业务场景中的应用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HBase的应用场景及架构原理">
+<meta property="og:url" content="http://yoursite.com/posts/2845542846/index.html">
+<meta property="og:site_name" content="Alex&#39;s Blog">
+<meta property="og:description" content="一、HBase在实际业务场景中的应用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/images/article/taftpointyosemitecalifornia.jpg">
+<meta property="article:published_time" content="2020-06-20T08:44:15.000Z">
+<meta property="article:modified_time" content="2020-06-20T08:45:50.351Z">
+<meta property="article:author" content="caizhengjie">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/article/taftpointyosemitecalifornia.jpg"><meta name="keywords" content="caizhengjie, Alex's Blog"><meta name="description" content=""><title>HBase的应用场景及架构原理 | Alex's Blog</title><link ref="canonical" href="http://yoursite.com/posts/2845542846/"><link rel="alternate" href="/atom.xml" type="application/atom+xml"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.1"><link rel="dns-prefetch" href="https://tajs.qq.com"><script>(function() {
+  var hm = document.createElement('script');
+  hm.src = 'https://tajs.qq.com/stats?sId=66564322';
+  hm.async = true;
+
+  if (true) {
+    hm.setAttribute('data-pjax', '');
+  }
+  var s = document.getElementsByTagName('script')[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"ocean","wordWrap":false},
+  reward: true,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: {"avoidBanner":true},
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="javascript:;" onclick="return false;"><span class="header-nav-menu-item__icon"><i class="fas fa-book"></i></span><span class="header-nav-menu-item__text">文章</span></a><div class="header-nav-submenu"><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/archives/"><span class="header-nav-submenu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-submenu-item__text">归档</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/categories/"><span class="header-nav-submenu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-submenu-item__text">分类</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/tags/"><span class="header-nav-submenu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-submenu-item__text">标签</span></a></div></div></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="javascript:;" onclick="return false;"><span class="header-nav-menu-item__icon"><i class="fas fa-link"></i></span><span class="header-nav-menu-item__text">链接</span></a><div class="header-nav-submenu"><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="https://blog.csdn.net/weixin_45366499" target="_blank" rel="noopener"><span class="header-nav-submenu-item__icon"><i class="far fa-copyright"></i></span><span class="header-nav-submenu-item__text">CSDN</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="https://liuyib.github.io/hexo-theme-stun/zh-CN/" target="_blank" rel="noopener"><span class="header-nav-submenu-item__icon"><i class="fas fa-biohazard"></i></span><span class="header-nav-submenu-item__text">STUN</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/data/"><span class="header-nav-submenu-item__icon"><i class="fas fa-users"></i></span><span class="header-nav-submenu-item__text">友链</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="https://news.qq.com/" target="_blank" rel="noopener"><span class="header-nav-submenu-item__icon"><i class="fas fa-bell"></i></span><span class="header-nav-submenu-item__text">新闻</span></a></div></div></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/personal/"><span class="header-nav-menu-item__icon"><i class="fas fa-user-circle"></i></span><span class="header-nav-menu-item__text">个人</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/about/"><span class="header-nav-menu-item__icon"><i class="fas fa-atom"></i></span><span class="header-nav-menu-item__text">关于</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/laboratory/"><span class="header-nav-menu-item__icon"><i class="fas fa-microscope"></i></span><span class="header-nav-menu-item__text">实验室</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Alex's Blog</div><div class="header-banner-info__subtitle">write code and love life</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">HBase的应用场景及架构原理</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon" data-popover="发表时间" data-popover-pos="up"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__value">2020-06-20</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon" data-popover="修改时间" data-popover-pos="up"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__value">2020-06-20</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon" data-popover="字数统计" data-popover-pos="up"><i class="far fa-file-word"></i></span><span class="post-meta-item__value">1.6k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon" data-popover="阅读时间" data-popover-pos="up"><i class="far fa-clock"></i></span><span class="post-meta-item__value">9分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon" data-popover="阅读次数" data-popover-pos="up"><i class="fas fa-eye"></i></span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><div class="gallery"><img src="/images/article/taftpointyosemitecalifornia.jpg"></div>
+        <h2 id="一、HBase在实际业务场景中的应用"   >
+          <a href="#一、HBase在实际业务场景中的应用" class="heading-link"><i class="fas fa-link"></i></a>一、HBase在实际业务场景中的应用</h2>
+      <a id="more"></a>
+<p> HBase是一个构建在HDFS上的分布式列存储系统；HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储<br>HBase能做什么？</p>
+<ul>
+<li>海量数据存储</li>
+<li>准实时查询</li>
+</ul>
+<p>举例说明HBase在实际业务场景中的应用</p>
+<ul>
+<li>交通</li>
+<li>金融</li>
+<li>电商</li>
+<li>移动</li>
+</ul>
+
+        <h2 id="二、HBase的特点"   >
+          <a href="#二、HBase的特点" class="heading-link"><i class="fas fa-link"></i></a>二、HBase的特点</h2>
+      <ul>
+<li>容量大：HBase单表可以有百亿行，百万列，数据矩阵横向和纵向两个纬度所支持的数据量级别都非常具有弹性</li>
+<li>稀疏性：为空的列并不占用存储空间，表可以设计的非常稀疏</li>
+<li>多版本：HBase每一列的数据存储有多个Version</li>
+<li>面向列：HBase是面向列的存储和权限控制，并支持独立检索。列式存储，其数据在表中是按照某列存储的，这样在查询只需要少数几个字段的时候，能大大减少读取的数据量。</li>
+<li>扩展性：底层依赖于HDFS</li>
+<li>高可靠性：WAL机制保证了数据写入时不会因集群异常而导致写入数据丢失：Replication机制保证了在集群出现严重的问题时，数据不会发生丢失或损坏。而HBase底层使用HDFS，HDFS本身也有备份。</li>
+<li>高性能：底层的LSM数据结构和RowKey有序排列等架构上的独特设计，使得HBase具有非常的写入性能。region切分、主键索引和缓存机制使得HBase在海量数据下具备一定的随机读取性能，该性能针对Rowkey的查询能够达到毫秒级。</li>
+</ul>
+
+        <h2 id="三、HBase数据模型并举例说明"   >
+          <a href="#三、HBase数据模型并举例说明" class="heading-link"><i class="fas fa-link"></i></a>三、HBase数据模型并举例说明</h2>
+      
+        <h3 id="（1）逻辑存储模型"   >
+          <a href="#（1）逻辑存储模型" class="heading-link"><i class="fas fa-link"></i></a>（1）逻辑存储模型</h3>
+      <p><img   src="https://img-blog.csdnimg.cn/20200620144549427.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述"><br><img   src="https://img-blog.csdnimg.cn/20200620144556770.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述"><br><img   src="https://img-blog.csdnimg.cn/20200620145009724.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述"><br><img   src="https://img-blog.csdnimg.cn/20200620145026967.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述"><br> RowKey：Hbase使用Rowkey来唯一的区分某一行的数据。<br> Column Family（列族）：Hbase通过列族划分数据的存储，列族下面可以包含任意多的列，实现灵活的数据存取。Hbase的列族不是越多越好，官方推荐的是列族最好小于或者等于3。我们使用的场景一般是1个列族。<br> Time Stamp（时间戳）：TimeStamp对Hbase来说至关重要，因为它是实现Hbase多版本的关键。在Hbase中使用不同的timestame来标识相同rowkey行对应的不通版本的数据。<br>Cell：HBase 中通过 rowkey 和 columns 确定的为一个存储单元称为 cell。每个 cell 都保存着同一份 数据的多个版本。版本通过时间戳来索引。</p>
+
+        <h3 id="（2）物理存储模型"   >
+          <a href="#（2）物理存储模型" class="heading-link"><i class="fas fa-link"></i></a>（2）物理存储模型</h3>
+      <p>Hbase的Table中的所有行都按照row key的字典序排列。Table 在行的方向上分割为多个Region。Region按大小分割的，每个表开始只有一个region，随 着数据增多，region不断增大，当增大到一个阀值的时候， region就会等分会两个新的region，之后会有越来越多的 region。<br><img   src="https://img-blog.csdnimg.cn/2020062015133549.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述"><br><img   src="https://img-blog.csdnimg.cn/20200620151359707.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述">Region是HBase中分布式存储和负载均衡的最小单元。 不同Region分布到不同RegionServer上。<br><img   src="https://img-blog.csdnimg.cn/20200620151423495.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述"> Region虽然是分布式存储的最小单元，但并不是存储 的最小单元。Region由一个或者多个Store组成，每个store保存一个 columns family。每个Strore又由一个memStore和0至多个StoreFile组成。memStore存储在内存中，StoreFile存储在HDFS上。<br><img   src="https://img-blog.csdnimg.cn/20200620151508530.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述"></p>
+
+        <h2 id="四、HBase基本架构"   >
+          <a href="#四、HBase基本架构" class="heading-link"><i class="fas fa-link"></i></a>四、HBase基本架构</h2>
+      <p><img src="https://img-blog.csdnimg.cn/20200620151645506.png" alt="在这里插入图片描述"><br>包括了HMaster、HRegionSever、HRegion、HLog、Store、MemStore、StoreFile、HFile等。HBase底层依赖HDFS，通过DFS Cilent进行HDFS操作。HMaster负责把HRegion分配给HRegionServer，每一个HRegionServer可以包含多个HRegion，多个HRegion共享HLog，HLog用来做灾难恢复。每一个HRegion由一个或多个Store组成，一个Store对应表的一个列族，每个Store中包含与其对应的MemStore以及一个或多个StoreFile（是实际数据存储文件HFile的轻量级封装），MemStore是在内存中的，保存了修改的数据，MemStore中的数据写到文件中就是StoreFile。</p>
+
+        <h3 id="（1）HMaster"   >
+          <a href="#（1）HMaster" class="heading-link"><i class="fas fa-link"></i></a>（1）HMaster</h3>
+      <p> HMaster的主要功能有：</p>
+<ul>
+<li>把HRegion分配到某一个RegionServer。</li>
+<li>有RegionServer宕机了，HMaster可以把这台机器上的Region迁移到active的RegionServer上。</li>
+<li>对HRegionServer进行负载均衡。</li>
+<li>通过HDFS的dfs client接口回收垃圾文件（无效日志等）<br>注：HMaster没有单点问题，HBase中可以启动多个HMaster，通过Zookeeper的Master Election机制保证总有一个Master运行。</li>
+</ul>
+
+        <h3 id="（2）HRegionServer"   >
+          <a href="#（2）HRegionServer" class="heading-link"><i class="fas fa-link"></i></a>（2）HRegionServer</h3>
+      <p>HRegionServer的主要功能有：</p>
+<ul>
+<li>维护HMaster分配给它的HRegion，处理对这些HRegion的IO请求，也就是说客户端直接和HRegionServer打交道。（从图中也能看出来）</li>
+<li>负责切分正在运行过程中变得过大的HRegion</li>
+</ul>
+
+        <h3 id="（3）基本架构"   >
+          <a href="#（3）基本架构" class="heading-link"><i class="fas fa-link"></i></a>（3）基本架构</h3>
+      <p>HBase构建在HDFS之上，其组件包括 Client、zookeeper、HDFS、Hmaster以及HRegionServer。Client包含访问HBase的接口，并维护cache来加快对HBase的访问。Zookeeper用来保证任何时候，集群中只有一个master，存贮所有Region的寻址入口以及实时监控Region server的上线和下线信息。并实时通知给Master存储HBase的schema和table元数据。HMaster负责为Region server分配region和Region server的负载均衡。如果发现失效的Region server并重新分配其上的region。同时，管理用户对table的增删改查操作。Region Server 负责维护region，处理对这些region的IO请求并且切分在运行过程中变得过大的region。<br><img   src="https://img-blog.csdnimg.cn/20200620152844598.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述"><br>HBase 依赖ZooKeeper，默认情况下，HBase 管理ZooKeeper 实例。比如， 启动或者停止ZooKeeper。Master与RegionServers 启动时会向ZooKeeper注册。因此，Zookeeper的引入使得 Master不再是单点故障。<br><img   src="https://img-blog.csdnimg.cn/20200620152948461.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述"><br> Client每次写数据库之前，都会首先血Hlog日志。记录写操作。如果不做日志记录，一旦发生故障，操作将不可恢复。HMaster一旦故障，Zookeeper将重新选择一个新的Master 。无Master过程中，数据读取仍照常进行。但是，无master过程中，region切分、负载均衡等无法进行。RegionServer出现故障的处理原理是定时向Zookeeper汇报心跳，如果一旦时 间内未出现心跳HMaster将该RegionServer上的Region重新分配到其他RegionServer上。失效服务器上“预写”日志由主服务器进行分割并派送给新的 RegionServer 。Zookeeper是一个可靠地服务，一般配置3或5个Zookeeper实例。<br><img   src="https://img-blog.csdnimg.cn/20200620152948339.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQ==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTM2NjQ5OQpx;"  alt="在这里插入图片描述"><br>  寻找RegionServer定位的顺序是ZooKeeper –ROOT-(单Region) -.META. -用户表 。如上图所示。-ROOT- 表包含.META.表所在的region列表，该表只会有一 个Region。 Zookeeper中记录了-ROOT-表的location。  .META. 表包含所有的用户空间region列表，以及 RegionServer的服务器地址。 </p>
+<p>参考文章：</p>
+<ul>
+<li><span class="exturl"><a class="exturl__link"   href="https://www.jianshu.com/p/9d3d388eae19?utm_source=oschina-app"  target="_blank" rel="noopener">https://www.jianshu.com/p/9d3d388eae19?utm_source=oschina-app</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+<li><span class="exturl"><a class="exturl__link"   href="https://blog.csdn.net/tianyeshiye/article/details/80768072"  target="_blank" rel="noopener">https://blog.csdn.net/tianyeshiye/article/details/80768072</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://yoursite.com">caizhengjie</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://yoursite.com/posts/2845542846/">http://yoursite.com/posts/2845542846/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://yoursite.com/tags/Hadoop/">Hadoop</a></span></div><div class="post-share"><div class="social-share" data-sites="qzone, qq, weibo, wechat, douban, linkedin, facebook, twitter, google">Share to: </div></div><div class="post-reward reward"><div class="reward-button">请我喝杯咖啡~</div><div class="reward-qrcode"><span class="reward-qrcode-alipay"><img class="reward-qrcode-alipay__img" src="/images/reward/WechatIMG6.jpeg"><div class="reward-qrcode-alipay__text">支付宝打赏</div></span><span class="reward-qrcode-wechat"><img class="reward-qrcode-wechat__img" src="/images/reward/WechatIMG7.jpeg"><div class="reward-qrcode-wechat__text">微信打赏</div></span></div></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/posts/3651396382/"><span class="paginator-prev__text">Centos7下HBase安装与配置（亲测！）</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div><div class="comments" id="comments"><div id="valine-container"></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、HBase在实际业务场景中的应用"><span class="toc-number">1.</span> <span class="toc-text">
+          一、HBase在实际业务场景中的应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、HBase的特点"><span class="toc-number">2.</span> <span class="toc-text">
+          二、HBase的特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、HBase数据模型并举例说明"><span class="toc-number">3.</span> <span class="toc-text">
+          三、HBase数据模型并举例说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（1）逻辑存储模型"><span class="toc-number">3.1.</span> <span class="toc-text">
+          （1）逻辑存储模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（2）物理存储模型"><span class="toc-number">3.2.</span> <span class="toc-text">
+          （2）物理存储模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、HBase基本架构"><span class="toc-number">4.</span> <span class="toc-text">
+          四、HBase基本架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（1）HMaster"><span class="toc-number">4.1.</span> <span class="toc-text">
+          （1）HMaster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（2）HRegionServer"><span class="toc-number">4.2.</span> <span class="toc-text">
+          （2）HRegionServer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（3）基本架构"><span class="toc-number">4.3.</span> <span class="toc-text">
+          （3）基本架构</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/icons/touxiang.jpeg" alt="avatar"></div><p class="sidebar-ov-author__text">一蓑烟雨任平生</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://plus.google.com/" target="_blank" rel="noopener" data-popover="Google" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-google"></i></span></a><a class="sidebar-ov-social-item" href="https://blog.csdn.net/weixin_45366499" target="_blank" rel="noopener" data-popover="CSDN" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">C</span></a><a class="sidebar-ov-social-item" href="https://www.zhihu.com/" target="_blank" rel="noopener" data-popover="知乎" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">知</span></a><a class="sidebar-ov-social-item" href="https://www.apollojava.com/relation/Wechat.jpeg" target="_blank" rel="noopener" data-popover="微信" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weixin"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="https://www.apollojava.com/relation/QQ.jpeg" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a><a class="sidebar-ov-social-item" href="https://segmentfault.com/" target="_blank" rel="noopener" data-popover="思否" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">sf</span></a><a class="sidebar-ov-social-item" href="https://www.runoob.com/" target="_blank" rel="noopener" data-popover="菜鸟教程" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">R</span></a><a class="sidebar-ov-social-item" href="http://www.matools.com/api/java8" target="_blank" rel="noopener" data-popover="Java8中文文档" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">Java</span></a><a class="sidebar-ov-social-item" href="https://leetcode-cn.com/" target="_blank" rel="noopener" data-popover="leetcode" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">L</span></a></div><div class="sidebar-ov-feed"><span class="sidebar-ov-feed-rss"><a class="sidebar-ov-feed-rss__link" href="/atom.xml" target="_blank" rel="noopener"><span class="sidebar-ov-feed-rss__icon"><i class="fas fa-rss"></i></span><span>RSS 订阅</span></a></span></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">6</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">3</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">2</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div><div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1436802341&auto=1&height=66"></iframe>
+</div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>caizhengjie</span></div><div><span>由 <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> 强力驱动</span><span> v4.2.1</span><span class="footer__devider">|</span><span>主题 - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.0.1</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon" data-popover-pos="up" data-popover="访问人数"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon" data-popover-pos="up" data-popover="浏览总量"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div><div>Hosted by <a href="https://pages.github.com/" rel="noopener" target="_blank">Github Pages</a></div><div><span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span><script>var now = new Date();
+function createtime() {
+  var grt = new Date("06/04/2020 00:00:00");
+  now.setTime(now.getTime() + 250);
+  days = (now - grt) / 1000 / 60 / 60 / 24;
+  dnum = Math.floor(days);
+  hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+  hnum = Math.floor(hours);
+  if (String(hnum).length == 1) {
+    hnum = "0" + hnum;
+  }
+  minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+  mnum = Math.floor(minutes);
+  if (String(mnum).length == 1) {
+    mnum = "0" + mnum;
+  }
+  seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+  snum = Math.round(seconds);
+  if (String(snum).length == 1) {
+    snum = "0" + snum;
+  }
+  document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+  document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+}
+setInterval("createtime()", 250);</script></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/ribbon.js@latest/dist/ribbon.min.js" size="120" alpha="0.6" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><script>function initSearch() {
+  var isXML = true;
+  var search_path = 'search.json';
+
+  if (!search_path) {
+    search_path = 'search.xml';
+  } else if (/json$/i.test(search_path)) {
+    isXML = false;
+  }
+
+  var path = '/' + search_path;
+  $.ajax({
+    url: path,
+    dataType: isXML ? 'xml' : 'json',
+    async: true,
+    success: function (res) {
+      var datas = isXML ? $('entry', res).map(function () {
+        // 将 XML 转为 JSON
+        return {
+          title: $('title', this).text(),
+          content: $('content', this).text(),
+          url: $('url', this).text()
+        };
+      }).get() : res;
+      var $input = $('.search-input input');
+      var $result = $('.search-results');
+      // 搜索对象（标题、内容）的权重，影响显示顺序
+      var WEIGHT = { title: 100, content: 1 };
+      var searchPost = function () {
+        var searchText = $input.val().toLowerCase().trim();
+        // 根据空白字符分隔关键字
+        var keywords = searchText.split(/[\s]+/);
+        // 搜索结果
+        var matchPosts = [];
+
+        // 有多个关键字时，将原文字整个保存下来
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        // 防止未输入字符时搜索
+        if (searchText.length > 0) {
+          datas.forEach(function (data) {
+            var isMatch  = false;
+            // 没有标题的文章使用预设的 i18n 变量代替
+            var title = (data.title && data.title.trim()) || '[ 文章无标题 ]';
+            var titleLower = title && title.toLowerCase();
+            // 删除 HTML 标签 和 所有空白字符
+            var content = data.content && data.content.replace(/<[^>]+>/g, '');
+            var contentLower = content && content.toLowerCase();
+            // 删除重复的 /
+            var postURL = data.url && decodeURI(data.url).replace(/\/{2,}/g, '/');
+            // 标题中匹配到的关键词
+            var titleHitSlice = [];
+            // 内容中匹配到的关键词
+            var contentHitSlice = [];
+
+            keywords.forEach(function (keyword) {
+              /**
+              * 获取匹配的关键词的索引
+              * @param {String} keyword 要匹配的关键字
+              * @param {String} text 原文字
+              * @param {Boolean} caseSensitive 是否区分大小写
+              * @param {Number} weight 匹配对象的权重。权重大的优先显示
+              * @return {Array}
+              */
+              function getIndexByword (word, text, caseSensitive, weight) {
+                if (!word || !text) {
+                  return [];
+                };
+
+                var startIndex = 0; // 每次匹配的开始索引
+                var index = -1;     // 匹配到的索引值
+                var result = [];    // 匹配结果
+
+                if (!caseSensitive) {
+                  word = word.toLowerCase();
+                  text = text.toLowerCase();
+                }
+
+                while((index = text.indexOf(word, startIndex)) !== -1) {
+                  var hasMatch = false;
+                  // 索引位置相同的关键词，保留长度较长的
+                  titleHitSlice.forEach(function (hit) {
+                    if (hit.index === index && hit.word.length < word.length) {
+                      hit.word = word;
+                      hasMatch = true;
+                    }
+                  });
+                  startIndex = index + word.length;
+                  !hasMatch && result.push({ index: index, word: word, weight: weight });
+                }
+                return result;
+              }
+              titleHitSlice = titleHitSlice.concat(getIndexByword(keyword, titleLower, false, WEIGHT.title));
+              contentHitSlice = contentHitSlice.concat(getIndexByword(keyword, contentLower, false, WEIGHT.content));
+            });
+
+            var hitTitle = titleHitSlice.length;
+            var hitContent = contentHitSlice.length;
+
+            if (hitTitle > 0 || hitContent > 0) {
+              isMatch = true;
+            }
+            if (isMatch) {
+              ;[titleHitSlice, contentHitSlice].forEach(function (hit) {
+                // 按照匹配文字的索引的递增顺序排序
+                hit.sort(function (left, right) {
+                  return left.index - right.index;
+                });
+              });
+              /**
+              * 给文本中匹配到的关键词添加标记，从而进行高亮显示
+              * @param {String} text 原文本
+              * @param {Array} hitSlice 匹配项的索引信息
+              * @param {Number} start 开始索引
+              * @param {Number} end 结束索引
+              * @return {String}
+              */
+              function highlightKeyword (text, hitSlice, start, end) {
+                if (!text || !hitSlice || !hitSlice.length) {
+                  return;
+                }
+
+                var result = '';
+                var startIndex = start;
+                var endIndex = end;
+                hitSlice.forEach(function (hit) {
+                  if (hit.index < startIndex) {
+                    return;
+                  }
+
+                  var hitWordEnd = hit.index + hit.word.length;
+                  result += text.slice(startIndex, hit.index);
+                  result += '<b>' + text.slice(hit.index, hitWordEnd) + '</b>';
+                  startIndex = hitWordEnd;
+                });
+                result += text.slice(startIndex, endIndex);
+                return result;
+              }
+
+              var postData = {};
+              // 文章总的搜索权重
+              var postWeight = titleHitSlice.length * WEIGHT.title + contentHitSlice.length * WEIGHT.content;
+              // 标记匹配关键词后的标题
+              var postTitle = highlightKeyword(title, titleHitSlice, 0, title.length) || title;
+              // 标记匹配关键词后的内容
+              var postContent;
+              // 显示内容的长度
+              var SHOW_WORD_LENGTH = 200;
+              // 命中关键词前的字符显示长度
+              var SHOW_WORD_FRONT_LENGTH = 20;
+              var SHOW_WORD_END_LENGTH = SHOW_WORD_LENGTH - SHOW_WORD_FRONT_LENGTH;
+
+              // 截取匹配的第一个字符，前后共 200 个字符来显示
+              if (contentHitSlice.length > 0) {
+                var firstIndex = contentHitSlice[0].index;
+                var start = firstIndex > SHOW_WORD_FRONT_LENGTH ? firstIndex - SHOW_WORD_FRONT_LENGTH : 0;
+                var end = firstIndex + SHOW_WORD_END_LENGTH;
+                postContent = highlightKeyword(content, contentHitSlice, start, end);
+              } else { // 未匹配到内容，直接截取前 200 个字符来显示
+                postContent = content.slice(0, SHOW_WORD_LENGTH);
+              }
+              postData.title = postTitle;
+              postData.content = postContent;
+              postData.url = postURL;
+              postData.weight = postWeight;
+              matchPosts.push(postData);
+            }
+          });
+        }
+
+        var resultInnerHtml = '';
+        if (matchPosts.length) {
+          // 按权重递增的顺序排序，使权重大的优先显示
+          matchPosts.sort(function (left, right) {
+            return right.weight - left.weight;
+          });
+          resultInnerHtml += '<ul>';
+          matchPosts.forEach(function (post) {
+            resultInnerHtml += '<li><a class="search-results-title" href="' + post.url + '">';
+            resultInnerHtml += post.title;
+            resultInnerHtml += '</a><div class="search-results-content">';
+            resultInnerHtml += post.content;
+            resultInnerHtml += '</div></li>';
+          });
+          resultInnerHtml += '</ul>';
+        } else {
+          resultInnerHtml += '<div class="search-results-none"><i class="far fa-meh"></i></div>';
+        }
+        $result.html(resultInnerHtml);
+      };
+      $input.on('input', searchPost);
+      $input.on('keyup', function (e) {
+        if (e.keyCode === Stun.utils.codeToKeyCode('Enter')) {
+          searchPost();
+        }
+      });
+    }
+  });
+}
+
+function closeSearch () {
+  $('body').css({ overflow: 'auto' });
+  $('.search-popup').css({ display: 'none' });
+  $('.search-mask').css({ display: 'none' });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  Stun.utils.pjaxReloadLocalSearch = function () {
+    $('.header-nav-search').on('click', function (e) {
+      e.stopPropagation();
+      $('body').css('overflow', 'hidden');
+      $('.search-popup')
+        .velocity('stop')
+        .velocity('transition.expandIn', {
+          duration: 300,
+          complete: function () {
+            $('.search-popup input').focus();
+          }
+        });
+      $('.search-mask')
+        .velocity('stop')
+        .velocity('transition.fadeIn', {
+          duration: 300
+        });
+
+      initSearch();
+    });
+    $('.search-mask, .search-close').on('click', function () {
+      closeSearch();
+    });
+    $(document).on('keydown', function (e) {
+      // Escape <=> 27
+      if (e.keyCode === Stun.utils.codeToKeyCode('Escape')) {
+        closeSearch();
+      }
+    });
+  };
+
+  Stun.utils.pjaxReloadLocalSearch();
+}, false);</script><script src="https://cdn.jsdelivr.net/npm/pjax@latest/pjax.min.js"></script><script>window.addEventListener('DOMContentLoaded', function () {
+  var pjax = new Pjax({"selectors":["head title","#main",".pjax-reload"],"history":true,"scrollTo":false,"scrollRestoration":false,"cacheBust":false,"debug":false,"currentUrlFullReload":false,"timeout":0});
+  // 加载进度条的计时器
+  var loadingTimer = null;
+
+  // 重置页面 Y 方向上的滚动偏移量
+  document.addEventListener('pjax:send', function () {
+    $('.header-nav-menu').removeClass('show');
+    if (CONFIG.pjax && CONFIG.pjax.avoidBanner) {
+      $('html').velocity('scroll', {
+        duration: 500,
+        offset: $('#header').height(),
+        easing: 'easeInOutCubic'
+      });
+    }
+
+    var loadingBarWidth = 20;
+    var MAX_LOADING_WIDTH = 95;
+
+    $('.loading-bar').addClass('loading');
+    $('.loading-bar__progress').css('width', loadingBarWidth + '%');
+    clearInterval(loadingTimer);
+    loadingTimer = setInterval(function () {
+      loadingBarWidth += 3;
+      if (loadingBarWidth > MAX_LOADING_WIDTH) {
+        loadingBarWidth = MAX_LOADING_WIDTH;
+      }
+      $('.loading-bar__progress').css('width', loadingBarWidth + '%');
+    }, 500);
+  }, false);
+
+  window.addEventListener('pjax:complete', function () {
+    clearInterval(loadingTimer);
+    $('.loading-bar__progress').css('width', '100%');
+    $('.loading-bar').removeClass('loading');
+    setTimeout(function () {
+      $('.loading-bar__progress').css('width', '0');
+    }, 400);
+    $('link[rel=prefetch], script[data-pjax-rm]').each(function () {
+      $(this).remove();
+    });
+    $('script[data-pjax], #pjax-reload script').each(function () {
+      $(this).parent().append($(this).remove());
+    });
+
+    if (Stun.utils.pjaxReloadBoot) {
+      Stun.utils.pjaxReloadBoot();
+    }
+    if (Stun.utils.pjaxReloadScroll) {
+      Stun.utils.pjaxReloadScroll();
+    }
+    if (Stun.utils.pjaxReloadSidebar) {
+      Stun.utils.pjaxReloadSidebar();
+    }
+    if (false) {
+      if (Stun.utils.pjaxReloadHeader) {
+        Stun.utils.pjaxReloadHeader();
+      }
+      if (Stun.utils.pjaxReloadScrollIcon) {
+        Stun.utils.pjaxReloadScrollIcon();
+      }
+      if (Stun.utils.pjaxReloadLocalSearch) {
+        Stun.utils.pjaxReloadLocalSearch();
+      }
+    }
+  }, false);
+}, false);</script><div id="pjax-reload"><script src="https://cdn.jsdelivr.net/npm/quicklink@1.0.1/dist/quicklink.umd.js"></script><script>function initQuicklink() {
+  quicklink({
+    timeout: '10000',
+    priority: true,
+    ignores: [uri => uri.includes('#'), uri => uri === 'http://yoursite.com/posts/2845542846/index.html', /\/api\/?/,uri => uri.includes('.xml'),uri => uri.includes('.zip'),(uri, el) => el.hasAttribute('nofollow'),(uri, el) => el.hasAttribute('noprefetch')]
+  });
+}
+
+if (true || false) {
+  initQuicklink();
+} else {
+  window.addEventListener('DOMContentLoaded', initQuicklink, false);
+}</script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script></div><script src="https://cdn.jsdelivr.net/npm/leancloud-storage@latest/dist/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script><script data-pjax="">function loadValine () {
+  var GUEST_INFO = ['nick', 'mail', 'link'];
+  var guest_info = 'nick,mail,link';
+
+  guest_info = guest_info.split(',').filter(function(item) {
+    return GUEST_INFO.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#valine-container',
+    appId: 'gyUN96pAmUofqPnwVQeoJK1L-9Nh9j0Va',
+    appKey: 'TN5t89IrYDg41LN1JN1sxQO7',
+    notify: true,
+    verify: true,
+    placeholder: 'ヾﾉ≧∀≦)o 来呀！吐槽一番吧！',
+    avatar: 'mp',
+    meta: guest_info,
+    pageSize: '10' || 10,
+    visitor: false,
+    recordIP: false,
+    lang: '' || 'zh-cn',
+    path: window.location.pathname
+  });
+}
+
+if (true) {
+  loadValine();
+} else {
+  window.addEventListener('DOMContentLoaded', loadValine, false);
+}</script><script src="/js/utils.js?v=2.0.1"></script><script src="/js/stun-boot.js?v=2.0.1"></script><script src="/js/scroll.js?v=2.0.1"></script><script src="/js/header.js?v=2.0.1"></script><script src="/js/sidebar.js?v=2.0.1"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"superSample":2,"width":100,"height":100,"position":"left"},"mobile":{"show":false},"react":{"opacityDefault":0.9,"opacityOnHover":0.5},"log":false});</script></body></html>
